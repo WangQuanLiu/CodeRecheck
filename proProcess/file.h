@@ -36,6 +36,7 @@
 		static list<list<string>>& remove_blank(list<list<string>>& token);
 		 bool save_file(list<string>& vec);
 		 bool save_token_file(list<list<string>>& token);
+		
 		 vector<string>& get_removed_text();
 		 MFile(string filePath);
 		/*功能：获取符号的大小*/
@@ -48,6 +49,8 @@
 		string get_file();//获取文件名
 		bool get_flag() { return flag; }
 		bool read_file();
+		string& get_filename();
+		string& get_fileDir();
 	protected:
 		bool flag;//检测文件是否成功打开 
 		//读取文件

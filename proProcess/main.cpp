@@ -7,6 +7,7 @@
 #include<climits>
 #include"AttributeCount.h"
 #include"LcsCodeRecheck.h"
+#include"CNNCodeRecheck.h"
 using namespace std;
 double compare_one(double diff_value, double mean) {
 	double two = 1.0 + ((diff_value) / 79.0);
@@ -65,11 +66,15 @@ int main() {
 	std::cout << repeat_rate(attributeCount.get_status(), attributeCount2.get_status());
 
 	std::cout << compare_one(10,39);*/
-	LcsCodeRecheck lcs("C:\\Users\\lwq\\Desktop\\data\\1\\1.c");
-	lcs.readFile();
-	LcsCodeRecheck lcs2("C:\\Users\\lwq\\Desktop\\data\\3\\3.c");
-	lcs2.readFile();
-	cout << LcsCodeRecheck::lcs(lcs.get_removed_text(), lcs2.get_removed_text());
+	//LcsCodeRecheck lcs("C:\\Users\\lwq\\Desktop\\data\\1\\1.c");
+	//lcs.readFile();
+	//LcsCodeRecheck lcs2("C:\\Users\\lwq\\Desktop\\data\\3\\3.c");
+	//lcs2.readFile();
+	//cout << LcsCodeRecheck::lcs(lcs.get_removed_text(), lcs2.get_removed_text());
+	CNNCodeRecheck cnn("C:\\Users\\lwq\\Desktop\\data\\1\\1.c");
+	cnn.read_file();
+	cnn.unify_file_style();
+	cnn.save_CNN_file();
 	system("pause");
 	return 0;
 }

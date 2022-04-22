@@ -13,15 +13,16 @@ bool MFile::save_token_file(list<list<string>>& token)
 		return false;
 		//flag = false;
 	}
-	vec.push_back("");
+	//vec.push_back("");
 	for (auto iter : token) {
 		string temp = "";
 		for (auto iter2 : iter) {
-			//outFile.write((iter2).c_str(), (iter2).length());
-			//outFile.write(" ", 2);
+			outFile.write((iter2).c_str(), (iter2).length());
+			outFile.write(" ", 2);
 			temp += (iter2).c_str() + string(" ");
 		}
-		//outFile.write("\n", 2);
+	//	outFile.write("\n", 2);
+		//outFile << endl;
 		vec.push_back(temp);
 	}
 	outFile.close();

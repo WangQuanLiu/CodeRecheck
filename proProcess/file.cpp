@@ -263,7 +263,8 @@ MFile::MFile(string filename):MFile() {
 					if (str[i] == ',' || str[i] == '+' || str[i] == '-' || str[i] == '*' ||
 						str[i] == '/' || str[i] == '<' || str[i] == '>' || str[i] == '=' ||
 						str[i] == ')' || str[i] == '(' || str[i] == ' ' || str[i] == ';' ||
-						str[i] == '{' || str[i] == '}' || str[i] == ':') {
+						str[i] == '{' || str[i] == '}' || str[i] == ':'	|| str[i] == '[' ||
+						str[i] == ']') {
 						if (lastIndex != i) {			//先保存与运算符连接在一起的数据
 							temp = str.substr(lastIndex, i - lastIndex);
 							ls.push_back(temp);
@@ -294,6 +295,7 @@ MFile::MFile(string filename):MFile() {
 					temp = str.substr(lastIndex, str.length() - lastIndex);
 					ls.push_back(temp);
 				}
+				ls.push_back("\n");
 				token.push_back(ls);
 				ls.clear();
 			}
@@ -308,6 +310,16 @@ MFile::MFile(string filename):MFile() {
 		token = remove_blank(token);
 		save_token_file(token);
 		return true;
+	}
+
+	string& MFile::get_filename()
+	{
+		return this->filename;
+	}
+
+	string& MFile::get_fileDir()
+	{
+		return this->fileDir;
 	}
 
 
@@ -341,6 +353,4 @@ MFile::MFile(string filename):MFile() {
 	}
 
 	
-
-
 

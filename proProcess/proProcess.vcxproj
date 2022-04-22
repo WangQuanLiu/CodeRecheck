@@ -142,6 +142,7 @@
   <ItemGroup>
     <ClCompile Include="AttributeCount.cpp" />
     <ClCompile Include="AttributeCountFile.cpp" />
+    <ClCompile Include="CNNCodeRecheck.cpp" />
     <ClCompile Include="file.cpp" />
     <ClCompile Include="LcsCodeRecheck.cpp" />
     <ClCompile Include="main.cpp" />
@@ -150,6 +151,7 @@
   <ItemGroup>
     <ClInclude Include="AttributeCount.h" />
     <ClInclude Include="AttributeCountFile.h" />
+    <ClInclude Include="CNNCodeRecheck.h" />
     <ClInclude Include="file.h" />
     <ClInclude Include="LcsCodeRecheck.h" />
     <ClInclude Include="myException.h" />
