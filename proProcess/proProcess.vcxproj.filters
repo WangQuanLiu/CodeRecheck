@@ -27,6 +27,12 @@
     <ClCompile Include="myException.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="AttributeCountFile.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="LcsCodeRecheck.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="file.h">
@@ -36,6 +42,12 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="myException.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="AttributeCountFile.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="LcsCodeRecheck.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

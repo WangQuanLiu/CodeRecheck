@@ -24,6 +24,7 @@
     <ProjectGuid>{864789e8-5c4b-4078-845d-b8e668c0c6b3}</ProjectGuid>
     <RootNamespace>proProcess</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>CodeRecheck</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -140,13 +141,17 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AttributeCount.cpp" />
+    <ClCompile Include="AttributeCountFile.cpp" />
     <ClCompile Include="file.cpp" />
+    <ClCompile Include="LcsCodeRecheck.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="myException.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AttributeCount.h" />
+    <ClInclude Include="AttributeCountFile.h" />
     <ClInclude Include="file.h" />
+    <ClInclude Include="LcsCodeRecheck.h" />
     <ClInclude Include="myException.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
