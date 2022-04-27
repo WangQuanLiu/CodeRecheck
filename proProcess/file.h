@@ -51,6 +51,7 @@
 		bool read_file();
 		string& get_filename();
 		string& get_fileDir();
+		vector<string> get_tokenVec();
 	protected:
 		bool flag;//检测文件是否成功打开 
 		//读取文件

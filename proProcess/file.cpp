@@ -173,7 +173,7 @@ MFile::MFile(string filename):MFile() {
 					continue;
 				else {
 					if (str[i] == '"')flag = !flag;
-					else if ((!flag) && ((str[i] == '/') && (i + 1 < str.size()) && (str[i + 1] == '/')))break;
+					else if ((flag) && ((str[i] == '/') && (i + 1 < str.size()) && (str[i + 1] == '/')))break;
 					temp += str[i];
 				}
 		
@@ -232,7 +232,7 @@ MFile::MFile(string filename):MFile() {
 			if (commentIndexBegin != -1) {
 				if (commentIndexEnd != -1) {
 					tempStr = tempStr.substr(0, commentIndexBegin) +
-						tempStr.substr(commentIndexEnd, tempStr.length() - commentIndexEnd);
+						tempStr.substr(commentIndexEnd+2, tempStr.length() - commentIndexEnd);
 				}
 				else {
 					commentsFlag = true;
@@ -246,6 +246,7 @@ MFile::MFile(string filename):MFile() {
 				commentsFlag = false;
 				tempStr = tempStr.substr(commentIndexEnd + 2, tempStr.length() - commentIndexEnd - 2);
 			}
+			if (tempStr == "")continue;
 			saveList.push_back(tempStr);
 		}
 		save_file(saveList);
@@ -264,7 +265,7 @@ MFile::MFile(string filename):MFile() {
 						str[i] == '/' || str[i] == '<' || str[i] == '>' || str[i] == '=' ||
 						str[i] == ')' || str[i] == '(' || str[i] == ' ' || str[i] == ';' ||
 						str[i] == '{' || str[i] == '}' || str[i] == ':'	|| str[i] == '[' ||
-						str[i] == ']') {
+						str[i] == ']' || str[i] =='|'  || str[i] == '!' || str[i] == '.') {
 						if (lastIndex != i) {			//先保存与运算符连接在一起的数据
 							temp = str.substr(lastIndex, i - lastIndex);
 							ls.push_back(temp);
@@ -320,6 +321,11 @@ MFile::MFile(string filename):MFile() {
 	string& MFile::get_fileDir()
 	{
 		return this->fileDir;
+	}
+
+	vector<string> MFile::get_tokenVec()
+	{
+		return vec;
 	}
 
 
