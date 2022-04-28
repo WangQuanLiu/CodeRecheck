@@ -34,9 +34,10 @@
 		static string split_file_name(char* fullPath);
 		static string remove_tabs_and_lineComments(string str);
 		static list<list<string>>& remove_blank(list<list<string>>& token);
-		 bool save_file(list<string>& vec);
-		 bool save_token_file(list<list<string>>& token);
-		
+		void set_vecToken(list<list<string>>&token);
+		bool save_file(list<string>& vec);
+		bool save_token_file(list<list<string>>& token);
+		static bool is_operator_symbol(char);
 		 vector<string>& get_removed_text();
 		 MFile(string filePath);
 		/*功能：获取符号的大小*/
@@ -51,7 +52,7 @@
 		bool read_file();
 		string& get_filename();
 		string& get_fileDir();
-		vector<string> get_tokenVec();
+		vector<string>& get_vecToken();
 	protected:
 		bool flag;//检测文件是否成功打开 
 		//读取文件
@@ -60,6 +61,7 @@
 		string rellback;//回滚值
 		list<list<string>>token;//存储符号
 		vector<string>vec;
+		vector<string>vecToekn;
 		stack<string>rellbackStack;
 		std::string filename,fileDir,filePath,savefilePath;//文件名
 		bool lineFeed;//换行符

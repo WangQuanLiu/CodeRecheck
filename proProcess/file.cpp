@@ -204,6 +204,15 @@ MFile::MFile(string filename):MFile() {
 		return token;
 	}
 
+	void MFile::set_vecToken(list<list<string>>& token)
+	{
+		for (auto iter_one : token) {
+			for (auto iter_two : iter_one) {
+				vecToekn.push_back(iter_two);
+			}
+		}
+	}
+
 
 	bool MFile::read_file()
 	{
@@ -261,11 +270,7 @@ MFile::MFile(string filename):MFile() {
 				for (i = 0; i < str.length(); i++) {	//如果为操作运算符或逻辑运算符
 					if (str[i] == '"')flag = !flag;
 					if (flag == true)continue; //引号内容不进行处理
-					if (str[i] == ',' || str[i] == '+' || str[i] == '-' || str[i] == '*' ||
-						str[i] == '/' || str[i] == '<' || str[i] == '>' || str[i] == '=' ||
-						str[i] == ')' || str[i] == '(' || str[i] == ' ' || str[i] == ';' ||
-						str[i] == '{' || str[i] == '}' || str[i] == ':'	|| str[i] == '[' ||
-						str[i] == ']' || str[i] =='|'  || str[i] == '!' || str[i] == '.') {
+					if (is_operator_symbol(str[i])) {
 						if (lastIndex != i) {			//先保存与运算符连接在一起的数据
 							temp = str.substr(lastIndex, i - lastIndex);
 							ls.push_back(temp);
@@ -310,6 +315,7 @@ MFile::MFile(string filename):MFile() {
 		flag = true;
 		token = remove_blank(token);
 		save_token_file(token);
+		set_vecToken(token);
 		return true;
 	}
 
@@ -323,9 +329,9 @@ MFile::MFile(string filename):MFile() {
 		return this->fileDir;
 	}
 
-	vector<string> MFile::get_tokenVec()
+	vector<string>& MFile::get_vecToken()
 	{
-		return vec;
+		return vecToekn;
 	}
 
 

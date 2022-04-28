@@ -71,7 +71,7 @@ int main() {
 	//LcsCodeRecheck lcs2("C:\\Users\\lwq\\Desktop\\data\\3\\3.c");
 	//lcs2.readFile();
 	//cout << LcsCodeRecheck::lcs(lcs.get_removed_text(), lcs2.get_removed_text());
-	CNNCodeRecheck cnn("C:\\Users\\lwq\\Desktop\\data\\wordTrainData\\code\\C语言超市管理系统\\C语言超市管理系统\\system.cpp");
+	CNNCodeRecheck cnn("C:\\Users\\lwq\\Desktop\\data\\5\\5.c");
 	cnn.read_file();
 	cnn.unify_file_style();
 	cnn.save_CNN_file();

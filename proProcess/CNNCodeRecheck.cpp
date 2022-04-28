@@ -6,10 +6,18 @@ bool CNNCodeRecheck::unify_file_function_style(string& token)
 	vector<string> vec;
 	string nextTemp;
 	if (token == "struct"||token=="union") {
+		nextTemp = file.get_token();
+		if (is_struct_value(temp) && is_keyword(nextTemp) == false) {
+			unifyedText.push_back(token);
+			unifyedText.push_back(UNIFED_STRUCT_NAME);
+			unifyedText.push_back(UNIFED_STRUCT_VAR);
+			return true;
+		}
 		structNameSet.insert(temp);
 		temp = UNIFED_STRUCT_NAME;
 		unifyedText.push_back(token);
 		unifyedText.push_back(temp);
+		file.roll_back();
 		return true;
 	}
 	else if (token == "enum") {
@@ -27,8 +35,9 @@ bool CNNCodeRecheck::unify_file_function_style(string& token)
 			if (temp == "int" || temp == "double" ||
 				temp == "float" || temp == "char") {
 				vec.push_back(UNIFED_DATA_TYPE);
-			//	vec.push_back("val");
-			//	file.get_token();
+			}
+			else if (is_struct_value(temp)&&is_keyword(nextTemp)) {
+				vec.push_back(UNIFED_STRUCT_NAME);
 			}
 			else if (is_char(temp)) {
 				vec.push_back(UNIFED_CHAR);
@@ -37,6 +46,7 @@ bool CNNCodeRecheck::unify_file_function_style(string& token)
 				vec.push_back(UNIFED_VAR);
 			else if (is_keyword(temp)==false&&nextTemp == "(")
 				vec.push_back(UNIFED_CALL_FUNC_NAME);
+			
 			else 
 				vec.push_back(temp);
 			temp = nextTemp;
@@ -89,7 +99,13 @@ void CNNCodeRecheck::unify_file_style()
 			unifyedText.push_back(temp);
 		}
 		else if (is_struct_value(temp) == true) {
-			unifyedText.push_back(UNIFED_STRUCT_VAR);
+			//unifyedText.push_back(UNIFED_STRUCT_VAR);
+			string nextTemp = file.get_token();
+			if (is_keyword(nextTemp) == false) {
+				unifyedText.push_back(UNIFED_STRUCT_NAME);
+				unifyedText.push_back(UNIFED_STRUCT_VAR);
+			}
+			else file.roll_back();
 		}
 		else if (is_digit(temp) == true) {
 			unifyedText.push_back(UNIFED_DIGIT);
@@ -110,6 +126,10 @@ bool CNNCodeRecheck::unify_var_style(string& token)
 	if (is_keyword(token) == true||
 		is_Real_digit_char(token)==true)
 		return false;
+	else if (is_struct_value(token)) {
+		unifyedText.push_back(UNIFED_STRUCT_VAR);
+		return true;
+	}
 	else {
 		unifyedText.push_back(UNIFED_VAR);
 		return true;
@@ -149,7 +169,7 @@ bool CNNCodeRecheck::save_CNN_file()
 
 inline void CNNCodeRecheck::statistics_struct_name()
 {
-	vector<string>vec = file.get_tokenVec();
+	vector<string>vec = file.get_vecToken();
 	size_t size = vec.size();
 	for (int i = 0; i < size; i++) {
 		if ((vec[i] == "struct" || vec[i] == "union") && i + 1 < size)
@@ -195,7 +215,7 @@ bool CNNCodeRecheck::is_keyword(string str)
 							 ,"==","<=",">=","<",">",")","(","goto","do","int","float",
 							 "double","char","[","]","+=","-=","*=","/=","struct","union",
 							 ",",";","case","break","default","{","}",":","enum","void","|"
-							 ,"!","FILE","NULL",".","#define"};
+							 ,"!","FILE","NULL",".","#define","sizeof","stdin"};
 	for (int i = 0; i < vec.size(); i++) {
 		if (str == vec[i])return true;
 	}
