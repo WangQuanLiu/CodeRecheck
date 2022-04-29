@@ -17,8 +17,8 @@
 #define CHARACTER_MAX 257
 #define READ_MAX 10
 #define ENTER ""
-
-#define FILE_LINE_MAX_NUMBER 1024
+#define EOF "EOF"
+#define FILE_LINE_MAX_NUMBER 4096
 #define SYMBOL_SIZE 15
 #define KEYWORD_TABLE 53
 	using namespace std;
@@ -53,6 +53,7 @@
 		string& get_filename();
 		string& get_fileDir();
 		vector<string>& get_vecToken();
+
 	protected:
 		bool flag;//检测文件是否成功打开 
 		//读取文件

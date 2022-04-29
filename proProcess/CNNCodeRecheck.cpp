@@ -7,11 +7,30 @@ bool CNNCodeRecheck::unify_file_function_style(string& token)
 	string nextTemp;
 	if (token == "struct"||token=="union") {
 		nextTemp = file.get_token();
-		if (is_struct_value(temp) && is_keyword(nextTemp) == false) {
-			unifyedText.push_back(token);
-			unifyedText.push_back(UNIFED_STRUCT_NAME);
-			unifyedText.push_back(UNIFED_STRUCT_VAR);
-			return true;
+		if (is_struct_name(temp) ) {
+			if (is_keyword(nextTemp) == false) {
+				unifyedText.push_back(token);
+				unifyedText.push_back(UNIFED_STRUCT_NAME);
+				unifyedText.push_back(UNIFED_STRUCT_VAR);
+				//structVarSet.insert(nextTemp);
+				return true;
+			}
+			else if (nextTemp == "*") {
+				unifyedText.push_back(token);
+				unifyedText.push_back(UNIFED_STRUCT_NAME);
+				unifyedText.push_back("*");
+				while ((nextTemp = file.get_token()) == "*") {
+					unifyedText.push_back("*");
+				}
+				if (is_digit(nextTemp)) {
+					unifyedText.push_back(UNIFED_DIGIT);
+				}
+				else {
+					unifyedText.push_back(UNIFED_STRUCT_VAR);
+					//structVarSet.insert(nextTemp);
+				}
+				return true;
+			}
 		}
 		structNameSet.insert(temp);
 		temp = UNIFED_STRUCT_NAME;
@@ -32,25 +51,29 @@ bool CNNCodeRecheck::unify_file_function_style(string& token)
 		temp = file.get_token();
 		do {
 			nextTemp = file.get_token();
+			while (nextTemp == "")nextTemp = file.get_token();
+			if (nextTemp == EOF)break;
 			if (temp == "int" || temp == "double" ||
 				temp == "float" || temp == "char") {
 				vec.push_back(UNIFED_DATA_TYPE);
 			}
-			else if (is_struct_value(temp)&&is_keyword(nextTemp)) {
+			else if (is_struct_name(temp)&&is_keyword(nextTemp)) {
 				vec.push_back(UNIFED_STRUCT_NAME);
 			}
 			else if (is_char(temp)) {
 				vec.push_back(UNIFED_CHAR);
 			}
+			else if (is_digit(temp)) {
+				vec.push_back(UNIFED_DIGIT);
+			}
 			else if ( is_keyword(temp) == false&&nextTemp!="(")
 				vec.push_back(UNIFED_VAR);
 			else if (is_keyword(temp)==false&&nextTemp == "(")
 				vec.push_back(UNIFED_CALL_FUNC_NAME);
-			
 			else 
 				vec.push_back(temp);
 			temp = nextTemp;
-		} while (temp != ";" && temp != "{"&&temp!="");
+		} while (temp != ";" && temp != "{");
 		vec.push_back(temp);
 		if (temp == "{") {
 			unifyedText.push_back(UNIFED_FUNC_NAME);
@@ -67,7 +90,7 @@ bool CNNCodeRecheck::unify_file_function_style(string& token)
 	}
 }
 
-bool CNNCodeRecheck::is_struct_value(string& token)
+bool CNNCodeRecheck::is_struct_name(string& token)
 {
 	if (structNameSet.count(token) >= 1) {
 		return true;
@@ -98,12 +121,16 @@ void CNNCodeRecheck::unify_file_style()
 		else if (temp == "\n") {
 			unifyedText.push_back(temp);
 		}
-		else if (is_struct_value(temp) == true) {
+		else if (is_struct_name(temp) == true) {
 			//unifyedText.push_back(UNIFED_STRUCT_VAR);
-			string nextTemp = file.get_token();
+			string nextTemp ;
+			vector<string>vec;
+			while ((nextTemp = file.get_token()) == "*")vec.push_back(nextTemp);
 			if (is_keyword(nextTemp) == false) {
 				unifyedText.push_back(UNIFED_STRUCT_NAME);
+				unifyedText += vec;
 				unifyedText.push_back(UNIFED_STRUCT_VAR);
+				//structVarSet.insert(nextTemp);
 			}
 			else file.roll_back();
 		}
@@ -126,7 +153,7 @@ bool CNNCodeRecheck::unify_var_style(string& token)
 	if (is_keyword(token) == true||
 		is_Real_digit_char(token)==true)
 		return false;
-	else if (is_struct_value(token)) {
+	else if (is_struct_name(token)) {
 		unifyedText.push_back(UNIFED_STRUCT_VAR);
 		return true;
 	}
@@ -155,14 +182,9 @@ bool CNNCodeRecheck::save_CNN_file()
 		return false;
 	}
 	for (int i = 0; i < unifyedText.size(); i++) {
-		/*if (unifyedText[i] == "\n") {
-			outFile.write("\n", 2);
-		}*/
 		outFile.write(unifyedText[i].c_str(), unifyedText[i].size());
 		outFile.put(' ');
-		//outFile.write(' ', sizeof(" "));
 	}
-
 	outFile.close();
 	return true;
 }
@@ -172,10 +194,30 @@ inline void CNNCodeRecheck::statistics_struct_name()
 	vector<string>vec = file.get_vecToken();
 	size_t size = vec.size();
 	for (int i = 0; i < size; i++) {
-		if ((vec[i] == "struct" || vec[i] == "union") && i + 1 < size)
+		if ((vec[i] == "struct" || vec[i] == "union") && i + 1 < size) {
 			structNameSet.insert(vec[i + 1]);
+		}
 		else if (vec[i] == "enum" && i + 1 < size)
 			enumNameSet.insert(vec[i + 1]);
+		else if (vec[i] == "typedef") {
+			if (i + 2 < size && structNameSet.count(vec[i + 1]) >= 1) {
+				if (is_keyword(vec[i + 2]))enumNameSet.insert(vec[i + 2]);
+				i += 2;
+			}
+			else {
+				unsigned int left_count = 0,right_count=0;
+				int j = i;
+				while (j < size) {
+					if (vec[j] == "{")left_count++;
+					else if (vec[j] == "}")right_count++;
+					else if (left_count == right_count)break;
+				}
+				if (j + 1 < size&&is_keyword(vec[j+1])==false) {
+					structNameSet.insert(vec[j + 1]);
+					i += 1;
+				}
+			}
+		}
 	}
 	
 }
@@ -199,23 +241,20 @@ inline bool CNNCodeRecheck::is_char(string& token)
 
 bool CNNCodeRecheck::is_Real_digit_char(string& token)
 {
-	/*std::regex regDigit("\\d+"), regReal("\\d+.\\d+");
-		bool isDigit = std::regex_match(token, regDigit);
-		bool isReal = regex_match(token, regReal);
-		int quote = token.find("\"", 0);
-		int sigleQuote = token.find("\'", 0);
-		if (isDigit ||isReal || quote != -1 || sigleQuote != -1)return true;*/
 	if (is_digit(token) || is_char(token))return true;
 	return false;
 }
 
 bool CNNCodeRecheck::is_keyword(string str)
 {
-	static vector<string>vec{ "for","while","switch","if","else","return","=","+","-","*","/"
+	static vector<string>vec{ "for","while","switch","if","else","return","=","*","+","-","/"
 							 ,"==","<=",">=","<",">",")","(","goto","do","int","float",
 							 "double","char","[","]","+=","-=","*=","/=","struct","union",
 							 ",",";","case","break","default","{","}",":","enum","void","|"
-							 ,"!","FILE","NULL",".","#define","sizeof","stdin"};
+							 ,"!","FILE","NULL",".","#define","sizeof","stdin","\n","typedef",
+							 "printf","fflush","gets","scanf","fopen","fwrite","fclose","getch",
+							  "feof","fread","system","strcmp","&","extern","#ifndef","#endif","itoa"
+							  "#if","free","malloc","memset","#else","static","continue","#undef","assert"};
 	for (int i = 0; i < vec.size(); i++) {
 		if (str == vec[i])return true;
 	}
@@ -252,7 +291,6 @@ const vector<T>& MVector<T>::operator+=(vector<T>& vec_obj)
 	}
 	return this->vec;
 }
-
 
 
 template<typename T>

@@ -91,7 +91,7 @@ MFile::MFile(string filename):MFile() {
 	string MFile::get_token()
 	{
 		string str;
-		if (token.empty() || !flag)return ENTER;//队列为空，返回EOF
+		if (token.empty() || !flag)return EOF;//队列为空，返回EOF
 		rellback = "";
 		if (((token.front()).size() <= 0) ||
 			((token.front()).size() <= 1 && (token.front().front() == ""))) {
@@ -163,7 +163,8 @@ MFile::MFile(string filename):MFile() {
 	string MFile::remove_tabs_and_lineComments(string str)
 	{
 		string temp = "";
-		bool flag = false;
+		static bool flag = false;
+		static bool flag_two = false;
 		int index = str.find("#include", 0);
 		if (index != -1) {
 			return "";
@@ -172,11 +173,15 @@ MFile::MFile(string filename):MFile() {
 				if (str[i] == '\t')
 					continue;
 				else {
-					if (str[i] == '"')flag = !flag;
-					else if ((flag) && ((str[i] == '/') && (i + 1 < str.size()) && (str[i + 1] == '/')))break;
+					if (str[i] == '\"')flag = !flag;
+					else if ((str[i] == '/') && (i + 1 < str.size()) && (str[i + 1] == '*'))flag_two = true;
+					else if ((str[i] == '*') && (i + 1 < str.size()) && (str[i + 1] == '/'))flag_two = false;
+					else if ((flag==false)&&(flag_two==false) && ((str[i] == '/') && (i + 1 < str.size()) && (str[i + 1] == '/')))
+						break;
+					//else if ((str[i] == '/') && (i + 1 < str.size()) && (str[i + 1] == '/'))break;
 					temp += str[i];
 				}
-		
+			
 		return temp;
 	}
 
@@ -268,7 +273,7 @@ MFile::MFile(string filename):MFile() {
 			if (str != "") {	//不为回车
 				bool flag = false;//引号标识 符
 				for (i = 0; i < str.length(); i++) {	//如果为操作运算符或逻辑运算符
-					if (str[i] == '"')flag = !flag;
+					if (str[i] == '"'||str[i]=='\'')flag = !flag;
 					if (flag == true)continue; //引号内容不进行处理
 					if (is_operator_symbol(str[i])) {
 						if (lastIndex != i) {			//先保存与运算符连接在一起的数据

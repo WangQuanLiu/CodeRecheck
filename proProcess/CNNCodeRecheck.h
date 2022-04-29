@@ -20,6 +20,7 @@ public:
 	T& operator[](unsigned int index) ;
 	T& operator[](const unsigned int index)const;
 	const vector<T>& operator+=(vector<T>& vec_obj);
+	//const MVector& operator+=(MVector& mvec_obj);
 	void push_back(T element);
 	//void push_back(const T& element);
 private:
@@ -35,7 +36,7 @@ public:
 	void setFilePath(string filePath);
 	static bool is_keyword(string str);
 	bool unify_file_function_style(string& token);
-	bool is_struct_value(string& token);
+	bool is_struct_name(string& token);
 	bool is_enum_value(string& token);
 	bool is_dataType(string& token);
 	void unify_file_style();
@@ -49,7 +50,7 @@ public:
 private:
 	MVector<string>unifyedText;
 	MFile file;
-	set<string>structNameSet, enumNameSet;
+	set<string>structNameSet, enumNameSet,structMemSet;
 };
 
 
