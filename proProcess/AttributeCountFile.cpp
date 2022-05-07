@@ -32,7 +32,7 @@ bool MFile::save_token_file(list<list<string>>& token)
 bool MFile::is_operator_symbol(char ch)
 {
 		static vector<char>vec{ ',','+','-','*','/','<','>','=',')','(',' ',';',
-								'{','}',':','[',']','|','!','.' ,'&'};
+								'{','}',':','[',']','|','!','.' ,'&','%'};
 		for (auto c : vec)
 			if (c == ch)return true;
 	return false;

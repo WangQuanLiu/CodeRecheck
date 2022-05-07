@@ -41,8 +41,11 @@ public:
 	bool is_dataType(string& token);
 	void unify_file_style();
 	bool unify_var_style(string& token);
+	bool unify_dataType_style(string& token);
 	bool read_file();
 	bool save_CNN_file();
+	//bool save_CNN_file(string& filePath);
+	bool save_CNN_file(const string& filePath);
 	inline void statistics_struct_name();
 	inline bool is_digit(string& token);
 	inline bool is_char(string& token);

@@ -263,7 +263,7 @@ MFile::MFile(string filename):MFile() {
 			if (tempStr == "")continue;
 			saveList.push_back(tempStr);
 		}
-		save_file(saveList);
+		//save_file(saveList);
 		while (!saveList.empty()) {//读取文件，放入队列
 			str.clear();
 			ls.clear();
@@ -319,8 +319,8 @@ MFile::MFile(string filename):MFile() {
 		file.close();
 		flag = true;
 		token = remove_blank(token);
-		save_token_file(token);
-		set_vecToken(token);
+		//save_token_file(token);
+		//set_vecToken(token);
 		return true;
 	}
 
